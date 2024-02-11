@@ -10,6 +10,13 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Meeting Page')));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lista de Reuniões'),
+      ),
+      body: const Center(
+        child: Text('Meeting Page'),
+      ),
+    );
   }
 }

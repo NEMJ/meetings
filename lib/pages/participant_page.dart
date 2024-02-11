@@ -10,6 +10,13 @@ class ParticipantPage extends StatefulWidget {
 class _ParticipantPageState extends State<ParticipantPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text('Participant Page')));
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Lista de Participantes'),
+      ),
+      body: const Center(
+        child: Text('Participant Page'),
+      ),
+    );
   }
 }
