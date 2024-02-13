@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:meetings/models/meeting_model.dart';
-import 'package:meetings/services/firebase_service_meeting.dart';
+import '../models/meeting_model.dart';
+import '../services/firebase_service_meeting.dart';
+import '../widgets/meeting_listTile_widget.dart';
 
 class MeetingPage extends StatefulWidget {
   const MeetingPage({super.key});
@@ -45,12 +46,7 @@ class _MeetingPageState extends State<MeetingPage> {
                   itemBuilder: (context, index) {
                     return Padding(
                       padding: const EdgeInsets.all(8),
-                      child: SizedBox(
-                        width: MediaQuery.of(context).size.width,
-                        child: ListTile(
-                          title: Text(snapshot.data![index].descricao),
-                        ),
-                      ),
+                      child: MeetingListTileWidget(meeting: snapshot.data![index], onTap: () {}),
                     );
                   },
                 );

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:meetings/models/meeting_model.dart';
+import '../models/meeting_model.dart';
 
 class FirebaseServiceMeeting {
   // Criando um construtor privado para padrão singleton
