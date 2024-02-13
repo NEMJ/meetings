@@ -24,7 +24,10 @@ class FirebaseServiceMeeting {
         (doc) => MeetingModel.fromDocument(doc)
       ).toList();
 
-      yield meetings;
+      List<MeetingModel> orderedMeetings =
+        meetings..sort((a, b) => a.descricao.compareTo(b.descricao));
+
+      yield orderedMeetings;
     }
   }
 

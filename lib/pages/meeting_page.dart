@@ -30,29 +30,34 @@ class _MeetingPageState extends State<MeetingPage> {
       appBar: AppBar(
         title: const Text('Lista de Reuniões'),
       ),
-      body: SizedBox(
-        child: Expanded(
-          child: StreamBuilder<List<MeetingModel>>(
-            stream: FirebaseServiceMeeting.instance.listMeetings(),
-            builder: (context, snapshot) {
-              if(!snapshot.hasData) {
-                return const Center(child: Text('Não há reuniões cadastradas'));
-              }
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: ListTile(
-                      title: Text(snapshot.data![index].descricao),
-                    ),
-                  );
-                },
-              );
-            },
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<List<MeetingModel>>(
+              stream: FirebaseServiceMeeting.instance.listMeetings(),
+              builder: (context, snapshot) {
+                if(!snapshot.hasData) {
+                  return const Center(child: Text('Não há reuniões cadastradas'));
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: SizedBox(
+                        width: MediaQuery.of(context).size.width,
+                        child: ListTile(
+                          title: Text(snapshot.data![index].descricao),
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+            ),
           ),
-        ),
+        ],
       ),
     );
   }
