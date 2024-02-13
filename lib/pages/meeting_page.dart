@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import './meeting_detail_page.dart';
 import '../models/meeting_model.dart';
-import '../services/firebase_service_meeting.dart';
+import '../services/firebase_meeting_service.dart';
 import '../widgets/meeting_listTile_widget.dart';
 
 class MeetingPage extends StatefulWidget {
@@ -19,6 +20,15 @@ class _MeetingPageState extends State<MeetingPage> {
     setState(() => meetings);
   }
 
+  navigationToMeetingPage(MeetingModel meeting) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MeetingDetailPage(meeting: meeting)
+      ),
+    );
+  }
+
   @override
   void initState() {
     listMeetings();
@@ -31,29 +41,35 @@ class _MeetingPageState extends State<MeetingPage> {
       appBar: AppBar(
         title: const Text('Lista de Reuniões'),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: StreamBuilder<List<MeetingModel>>(
-              stream: FirebaseServiceMeeting.instance.listMeetings(),
-              builder: (context, snapshot) {
-                if(!snapshot.hasData) {
-                  return const Center(child: Text('Não há reuniões cadastradas'));
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: MeetingListTileWidget(meeting: snapshot.data![index], onTap: () {}),
-                    );
-                  },
-                );
-              },
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        child: Column(
+          children: [
+            Expanded(
+              child: StreamBuilder<List<MeetingModel>>(
+                stream: meetings,
+                builder: (context, snapshot) {
+                  if(!snapshot.hasData) {
+                    return const Center(child: Text('Não há reuniões cadastradas'));
+                  }
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 8),
+                        child: MeetingListTileWidget(
+                          meeting: snapshot.data![index],
+                          onTap: () => navigationToMeetingPage(snapshot.data![index]),
+                        ),
+                      );
+                    },
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
