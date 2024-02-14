@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import './meeting_detail_page.dart';
 import '../models/meeting_model.dart';
 import '../services/firebase_meeting_service.dart';
-import '../widgets/meeting_listTile_widget.dart';
+import '../widgets/meeting_list_tile_widget.dart';
 
 class MeetingPage extends StatefulWidget {
   const MeetingPage({super.key});
