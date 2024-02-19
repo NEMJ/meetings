@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
   final String label;
-  final String? initialValue;
+  final TextEditingController controller;
 
   const TextFormFieldWidget({
     required this.label,
-    this.initialValue,
+    required this.controller,
     super.key
   });
 
@@ -15,7 +15,7 @@ class TextFormFieldWidget extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
-        initialValue: initialValue,
+        controller: controller,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: label,

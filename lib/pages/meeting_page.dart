@@ -20,7 +20,7 @@ class _MeetingPageState extends State<MeetingPage> {
     setState(() => meetings);
   }
 
-  navigationToMeetingPage(MeetingModel meeting) {
+  navigationToMeetingPage(MeetingModel? meeting) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -40,6 +40,15 @@ class _MeetingPageState extends State<MeetingPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lista de Reuniões'),
+        actions: [
+          IconButton(
+            icon: Icon(
+              Icons.domain_add_rounded,
+              color: Colors.deepPurple.shade900,
+            ),
+            onPressed: () => navigationToMeetingPage(null),
+          ),
+        ]
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
