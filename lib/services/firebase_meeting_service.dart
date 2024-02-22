@@ -36,8 +36,8 @@ class FirebaseServiceMeeting {
     await _collection.doc(meeting.id).update(meeting.toMap());
   }
 
-  Future<void> deleteMeeting(MeetingModel meeting) async {
+  Future<void> deleteMeeting(String meetingId) async {
     // Deletando o documento na coleção com o ID do objeto
-    await _collection.doc(meeting.id).delete();
+    await _collection.doc(meetingId).delete();
   }
 }

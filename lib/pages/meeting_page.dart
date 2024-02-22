@@ -14,6 +14,7 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage> {
 
   late Stream<List<MeetingModel>> meetings;
+  final firebaseMeeting = FirebaseServiceMeeting.instance;
 
   Future<void> listMeetings() async {
     meetings = FirebaseServiceMeeting.instance.listMeetings();
@@ -70,6 +71,7 @@ class _MeetingPageState extends State<MeetingPage> {
                         child: MeetingListTileWidget(
                           meeting: snapshot.data![index],
                           onTap: () => navigationToMeetingPage(snapshot.data![index]),
+                          onPressedIcon: () => firebaseMeeting.deleteMeeting(snapshot.data![index].id),
                         ),
                       );
                     },
