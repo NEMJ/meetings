@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 import '../services/firebase_meeting_service.dart';
 import '../models/meeting_model.dart';
 import '../widgets/text_form_field_widget.dart';
-// import '../services/firebase_meeting_service.dart';
 
 class MeetingDetailPage extends StatefulWidget {
   final MeetingModel? meeting;
@@ -27,7 +27,29 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
   final _horarioInicioController = TextEditingController();
   final _horarioTerminoController = TextEditingController();
 
-  initControllers() {
+  MeetingModel getAtualMeeting() {
+    final meetingID = (widget.meeting != null) ? widget.meeting!.id : const Uuid().v1();
+
+    return MeetingModel(
+      id: meetingID,
+      descricao: _descricaoController.text,
+      entidade: _entidadeController.text,
+      diaSemana: _diaSemanaController.text,
+      horarioInicio: _horarioInicioController.text,
+      horarioTermino: _horarioTerminoController.text,
+    );
+  }
+
+  saveOrUpdateMeeting() {
+    if (widget.meeting != null) {
+      firebaseServiceMeeting.updateMeeting(getAtualMeeting());
+      return;
+    }
+    firebaseServiceMeeting.saveMeeting(getAtualMeeting());
+  }
+
+  @override
+  void initState() {
     if(widget.meeting != null) {
       _descricaoController.text = widget.meeting!.descricao;
       _entidadeController.text = widget.meeting!.entidade;
@@ -35,11 +57,6 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
       _horarioInicioController.text = widget.meeting!.horarioInicio;
       _horarioTerminoController.text = widget.meeting!.horarioTermino;
     }
-  }
-
-  @override
-  void initState() {
-    initControllers();
     super.initState();
   }
 
@@ -56,16 +73,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
               Icons.save_rounded,
               color: Colors.deepPurple.shade900
             ),
-            onPressed: () => firebaseServiceMeeting.updateMeeting(
-              MeetingModel(
-                id: widget.meeting!.id,
-                descricao: widget.meeting!.descricao,
-                entidade: widget.meeting!.entidade,
-                diaSemana: widget.meeting!.diaSemana,
-                horarioInicio: widget.meeting!.horarioInicio,
-                horarioTermino: widget.meeting!.horarioTermino,
-              ),
-            ),
+            onPressed: saveOrUpdateMeeting,
           ),
         ],
       ),
