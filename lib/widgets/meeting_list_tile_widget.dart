@@ -21,7 +21,7 @@ class MeetingListTileWidget extends StatelessWidget {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 4.0),
       tileColor: const Color.fromARGB(255, 249, 245, 255),
-      leading: const CircleAvatar(child: Icon(Icons.business_rounded),),
+      leading: const CircleAvatar(child: Icon(Icons.business_rounded)),
       trailing: IconButton(
         icon: const Icon(Icons.remove_circle_outlined),
         color: Colors.red.shade300,

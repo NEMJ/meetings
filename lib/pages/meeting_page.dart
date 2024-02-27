@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:meetings/widgets/confirm_deletion_dialog_widget.dart';
 import './meeting_detail_page.dart';
 import '../models/meeting_model.dart';
 import '../services/firebase_meeting_service.dart';
@@ -71,7 +72,13 @@ class _MeetingPageState extends State<MeetingPage> {
                         child: MeetingListTileWidget(
                           meeting: snapshot.data![index],
                           onTap: () => navigationToMeetingPage(snapshot.data![index]),
-                          onPressedIcon: () => firebaseMeeting.deleteMeeting(snapshot.data![index].id),
+                          onPressedIcon: () => showDialog(
+                            context: context,
+                            builder: (_) => ConfirmDeletionDialogWidget(
+                              title: 'Deseja realmente excluir a reunião ${snapshot.data![index].descricao}?',
+                              onDelete: () => firebaseMeeting.deleteMeeting(snapshot.data![index].id),
+                            ),
+                          ),
                         ),
                       );
                     },

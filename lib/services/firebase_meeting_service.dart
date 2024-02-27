@@ -13,7 +13,6 @@ class FirebaseServiceMeeting {
 
   Future<void> saveMeeting(MeetingModel meeting) async {
     // Adiciona um novo documento na coleção com o mapa do objeto
-    // await _collection.add(meeting.toMap());
     await _collection.doc(meeting.id).set(meeting.toMap());
   }
 
