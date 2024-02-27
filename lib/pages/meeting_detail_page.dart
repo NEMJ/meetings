@@ -43,10 +43,22 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
 
   saveOrUpdateMeeting() {
     if (widget.meeting != null) {
-      firebaseServiceMeeting.updateMeeting(getAtualMeeting());
+      firebaseServiceMeeting.updateMeeting(getAtualMeeting())
+        .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Reunião "${_descricaoController.text}" atualizada com sucesso'),
+          ),
+        ));
+      Navigator.of(context).pop();
       return;
     }
-    firebaseServiceMeeting.saveMeeting(getAtualMeeting());
+    firebaseServiceMeeting.saveMeeting(getAtualMeeting())
+      .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar
+          (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
+        ),
+      ));
+      Navigator.of(context).pop();
   }
 
   @override
