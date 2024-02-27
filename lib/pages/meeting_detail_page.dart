@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 import '../services/firebase_meeting_service.dart';
 import '../models/meeting_model.dart';
 import '../widgets/text_form_field_widget.dart';
+import '../widgets/dropdown_button_form_field_widget.dart';
 
 class MeetingDetailPage extends StatefulWidget {
   final MeetingModel? meeting;
@@ -92,9 +93,11 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                 label: 'Entidade',
                 controller: _entidadeController,
               ),
-              TextFormFieldWidget(
+              DropdownButtonFormFieldWidget(
+                value: widget.meeting?.diaSemana, // Se o objeto for nulo ele envia null para esta propriedade
                 label: 'Dia da Semana',
-                controller: _diaSemanaController,
+                listItems: const ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+                onChanged: (option) => _diaSemanaController.text = option!,
               ),
               TextFormFieldWidget(
                 label: 'Horário de Início',
