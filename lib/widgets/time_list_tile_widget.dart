@@ -42,6 +42,12 @@ class _TimeListTileWidgetState extends State<TimeListTileWidget> {
               context: context,
               initialTime: selectedTime,
               initialEntryMode: TimePickerEntryMode.dial,
+              errorInvalidText: 'Hora ou minutos inválidos',
+              helpText: 'Escolha um horário',
+              confirmText: 'Confirmar',
+              cancelText: 'Cancelar',
+              hourLabelText: 'Hora',
+              minuteLabelText: 'Minutos',
             );
             if(timeOfDay != null) {
               setState(() => selectedTime = timeOfDay);
