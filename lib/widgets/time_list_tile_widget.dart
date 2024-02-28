@@ -32,7 +32,7 @@ class _TimeListTileWidgetState extends State<TimeListTileWidget> {
             );
             if(timeOfDay != null) {
               setState(() => selectedTime = timeOfDay);
-              widget.controller.text = "${timeOfDay.hourOfPeriod.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')} ${timeOfDay.period.name.toUpperCase()}";
+              widget.controller.text = "${timeOfDay.hour.toString().padLeft(2, '0')}:${timeOfDay.minute.toString().padLeft(2, '0')}";
             }
           },
           tileColor: Colors.deepPurple.shade50,
@@ -47,6 +47,7 @@ class _TimeListTileWidgetState extends State<TimeListTileWidget> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
+          trailing: const Icon(Icons.edit, size: 20, color: Colors.deepPurple),
         ),
       ),
     );
