@@ -15,8 +15,21 @@ class TimeListTileWidget extends StatefulWidget {
 }
 
 class _TimeListTileWidgetState extends State<TimeListTileWidget> {
+
+  late TimeOfDay selectedTime;
+
+  @override
+  void initState() {
+    // Se o controller vier vazio quer dizer que é um novo cadastro
+    selectedTime = (widget.controller.text == '')
+      ? TimeOfDay.now() // Hora mostrada pelo TimePicker será a atual para novos cadastros
+      : TimeOfDay(
+        hour: int.parse(widget.controller.text.split(':')[0]),
+        minute: int.parse(widget.controller.text.split(':')[1]), 
+      );
+    super.initState();
+  }
   
-  TimeOfDay selectedTime = TimeOfDay.now();
 
   @override
   Widget build(BuildContext context) {
