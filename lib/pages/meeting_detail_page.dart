@@ -41,7 +41,37 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
     );
   }
 
+  // retorna false se qualquer controller estiver vazio
+  validateFields() {
+    return 
+      _descricaoController.text.isEmpty ||
+      _entidadeController.text.isEmpty ||
+      _diaSemanaController.text.isEmpty ||
+      _horarioInicioController.text.isEmpty ||
+      _horarioTerminoController.text.isEmpty;
+  }
+
   saveOrUpdateMeeting() {
+    // verifica se existe algum campo vazio. Se for o caso aparece um aviso sobre.
+    if (validateFields()) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Preencha todos os campos'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ]
+        ),
+      );
+
+      return;
+    }
+
+    // verifica se é uma atualização ou novo cadastro para invocar as funções corretas
+    // e mostra um retorno visual ao usuário de que deu certo a operação feita
     if (widget.meeting != null) {
       firebaseServiceMeeting.updateMeeting(getAtualMeeting())
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(
@@ -52,12 +82,14 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
       Navigator.of(context).pop();
       return;
     }
+
     firebaseServiceMeeting.saveMeeting(getAtualMeeting())
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar
           (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
         ),
       ));
+
     Navigator.of(context).pop();
   }
 
