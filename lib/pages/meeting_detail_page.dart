@@ -4,6 +4,7 @@ import '../services/firebase_meeting_service.dart';
 import '../models/meeting_model.dart';
 import '../widgets/text_form_field_widget.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
+import '../widgets/time_list_tile_widget.dart';
 
 class MeetingDetailPage extends StatefulWidget {
   final MeetingModel? meeting;
@@ -19,7 +20,6 @@ class MeetingDetailPage extends StatefulWidget {
 
 class _MeetingDetailPageState extends State<MeetingDetailPage> {
   final _formKey = GlobalKey<FormState>();
-
   final firebaseServiceMeeting = FirebaseServiceMeeting.instance;
 
   final _descricaoController = TextEditingController();
@@ -58,7 +58,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
           (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
         ),
       ));
-      Navigator.of(context).pop();
+    Navigator.of(context).pop();
   }
 
   @override
@@ -111,13 +111,12 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
                 listItems: const ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
                 onChanged: (option) => _diaSemanaController.text = option!,
               ),
-              TextFormFieldWidget(
-                label: 'Horário de Início',
-                controller: _horarioInicioController,
-              ),
-              TextFormFieldWidget(
-                label: 'Horário de Término',
-                controller: _horarioTerminoController,
+              Row(
+                children: [
+                  TimeListTileWidget(label: 'Início: ', controller: _horarioInicioController),
+                  const SizedBox(width: 16),
+                  TimeListTileWidget(label: 'Final: ', controller: _horarioTerminoController),
+                ]
               ),
             ],
           ),

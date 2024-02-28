@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import '../models/meeting_model.dart';
 
 class MeetingListTileWidget extends StatelessWidget {
-  final MeetingModel meeting;
-  final Function()? onTap;
-  final void Function() onPressedIcon;
-
   const MeetingListTileWidget({
     required this.meeting,
     this.onTap,
     required this.onPressedIcon,
     super.key
   });
+
+  final MeetingModel meeting;
+  final Function()? onTap;
+  final void Function() onPressedIcon;
 
   @override
   Widget build(BuildContext context) {

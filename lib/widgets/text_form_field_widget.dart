@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 
 class TextFormFieldWidget extends StatelessWidget {
-  final String label;
-  final TextEditingController controller;
-
   const TextFormFieldWidget({
     required this.label,
     required this.controller,
+    this.onTap,
     super.key
   });
+
+  final String label;
+  final TextEditingController controller;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +18,7 @@ class TextFormFieldWidget extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 16.0),
       child: TextFormField(
         controller: controller,
+        onTap: onTap,
         decoration: InputDecoration(
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: label,
