@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MeetingModel {
-  String id;
-  String descricao;
-  String entidade;
-  String diaSemana;
-  String horarioInicio;
-  String horarioTermino;
+  final String id;
+  final String descricao;
+  final String entidade;
+  final String diaSemana;
+  final String horarioInicio;
+  final String horarioTermino;
   
-  MeetingModel({
+  const MeetingModel({
     required this.id,
     required this.descricao,
     required this.entidade,

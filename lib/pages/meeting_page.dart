@@ -15,10 +15,10 @@ class MeetingPage extends StatefulWidget {
 class _MeetingPageState extends State<MeetingPage> {
 
   late Stream<List<MeetingModel>> meetings;
-  final firebaseMeeting = FirebaseServiceMeeting.instance;
+  final firebaseMeetingService = FirebaseMeetingService.instance;
 
   Future<void> listMeetings() async {
-    meetings = FirebaseServiceMeeting.instance.listMeetings();
+    meetings = FirebaseMeetingService.instance.listMeetings();
     setState(() => meetings);
   }
 
@@ -76,7 +76,7 @@ class _MeetingPageState extends State<MeetingPage> {
                             context: context,
                             builder: (_) => ConfirmDeletionDialogWidget(
                               title: 'Deseja realmente excluir a reunião ${snapshot.data![index].descricao}?',
-                              onDelete: () => firebaseMeeting.deleteMeeting(snapshot.data![index].id),
+                              onDelete: () => firebaseMeetingService.deleteMeeting(snapshot.data![index].id),
                             ),
                           ),
                         ),

@@ -20,7 +20,7 @@ class MeetingDetailPage extends StatefulWidget {
 
 class _MeetingDetailPageState extends State<MeetingDetailPage> {
   final _formKey = GlobalKey<FormState>();
-  final firebaseServiceMeeting = FirebaseServiceMeeting.instance;
+  final firebaseMeetingService = FirebaseMeetingService.instance;
 
   final _descricaoController = TextEditingController();
   final _entidadeController = TextEditingController();
@@ -73,7 +73,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
     // verifica se é uma atualização ou novo cadastro para invocar as funções corretas
     // e mostra um retorno visual ao usuário de que deu certo a operação feita
     if (widget.meeting != null) {
-      firebaseServiceMeeting.updateMeeting(getAtualMeeting())
+      firebaseMeetingService.updateMeeting(getAtualMeeting())
         .then((value) => ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Reunião "${_descricaoController.text}" atualizada com sucesso'),
@@ -83,7 +83,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
       return;
     }
 
-    firebaseServiceMeeting.saveMeeting(getAtualMeeting())
+    firebaseMeetingService.saveMeeting(getAtualMeeting())
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar
           (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),

@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/meeting_model.dart';
 
-class FirebaseServiceMeeting {
+class FirebaseMeetingService {
   // Criando um construtor privado para padrão singleton
-  FirebaseServiceMeeting._();
+  FirebaseMeetingService._();
   // Criando uma instância estática
-  static final FirebaseServiceMeeting _instance = FirebaseServiceMeeting._();
+  static final FirebaseMeetingService _instance = FirebaseMeetingService._();
   // Criando um método para acessar a instância
-  static FirebaseServiceMeeting get instance => _instance;
+  static FirebaseMeetingService get instance => _instance;
 
   final _collection = FirebaseFirestore.instance.collection('reunioes');
 
