@@ -5,7 +5,7 @@ class FirebaseParticipantService {
   FirebaseParticipantService._();
   static final FirebaseParticipantService _instance = FirebaseParticipantService._();
   static FirebaseParticipantService get instance => _instance;
-  final _collection = FirebaseFirestore.instance.collection('participante');
+  final _collection = FirebaseFirestore.instance.collection('participantes');
 
   Future<void> saveParticipant(ParticipantModel participant) async {
     await _collection.doc(participant.id).set(participant.toMap());

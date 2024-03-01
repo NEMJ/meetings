@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:meetings/widgets/confirm_deletion_dialog_widget.dart';
+import '../widgets/confirm_deletion_dialog_widget.dart';
 import './meeting_detail_page.dart';
 import '../models/meeting_model.dart';
 import '../services/firebase_meeting_service.dart';
@@ -18,7 +18,7 @@ class _MeetingPageState extends State<MeetingPage> {
   final firebaseMeetingService = FirebaseMeetingService.instance;
 
   Future<void> listMeetings() async {
-    meetings = FirebaseMeetingService.instance.listMeetings();
+    meetings = firebaseMeetingService.listMeetings();
     setState(() => meetings);
   }
 
