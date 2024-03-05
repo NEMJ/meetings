@@ -19,7 +19,7 @@ class MeetingDetailPage extends StatefulWidget {
 }
 
 class _MeetingDetailPageState extends State<MeetingDetailPage> {
-  final _formKey = GlobalKey<FormState>();
+
   final firebaseMeetingService = FirebaseMeetingService.instance;
 
   final _descricaoController = TextEditingController();
@@ -28,7 +28,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
   final _horarioInicioController = TextEditingController();
   final _horarioTerminoController = TextEditingController();
 
-  MeetingModel getAtualMeeting() {
+  MeetingModel buildMeeting() {
     final meetingID = (widget.meeting != null) ? widget.meeting!.id : const Uuid().v1();
 
     return MeetingModel(
@@ -43,17 +43,15 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
 
   // retorna false se qualquer controller estiver vazio
   validateFields() {
-    return 
-      _descricaoController.text.isEmpty ||
-      _entidadeController.text.isEmpty ||
-      _diaSemanaController.text.isEmpty ||
-      _horarioInicioController.text.isEmpty ||
-      _horarioTerminoController.text.isEmpty;
-  }
+    bool allFieldsFilled = 
+      _descricaoController.text.isNotEmpty ||
+      _entidadeController.text.isNotEmpty ||
+      _diaSemanaController.text.isNotEmpty ||
+      _horarioInicioController.text.isNotEmpty ||
+      _horarioTerminoController.text.isNotEmpty;
 
-  saveOrUpdateMeeting() {
     // verifica se existe algum campo vazio. Se for o caso aparece um aviso sobre.
-    if (validateFields()) {
+    if (!allFieldsFilled) {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
@@ -66,30 +64,39 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
           ]
         ),
       );
-
-      return;
+    } else {
+      done();
     }
+  }
 
-    // verifica se é uma atualização ou novo cadastro para invocar as funções corretas
-    // e mostra um retorno visual ao usuário de que deu certo a operação feita
-    if (widget.meeting != null) {
-      firebaseMeetingService.updateMeeting(getAtualMeeting())
-        .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Reunião "${_descricaoController.text}" atualizada com sucesso'),
-          ),
-        ));
-      Navigator.of(context).pop();
-      return;
+  done() {
+    MeetingModel meetingModel = buildMeeting();
+
+    if (widget.meeting == null) {
+      saveMeeting(meetingModel);
+    } else {
+      updateMeeting(meetingModel);
     }
+  }
 
-    firebaseMeetingService.saveMeeting(getAtualMeeting())
+  saveMeeting(MeetingModel meeting) {
+    firebaseMeetingService.saveMeeting(meeting)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar
           (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
         ),
       ));
 
+    Navigator.of(context).pop();
+  }
+
+  updateMeeting(MeetingModel meeting) {
+    firebaseMeetingService.updateMeeting(meeting)
+      .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Reunião "${_descricaoController.text}" atualizada com sucesso'),
+        ),
+      ));
     Navigator.of(context).pop();
   }
 
@@ -101,7 +108,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
       _diaSemanaController.text = widget.meeting!.diaSemana;
       _horarioInicioController.text = widget.meeting!.horarioInicio;
       _horarioTerminoController.text = widget.meeting!.horarioTermino;
-    }
+    } 
     super.initState();
   }
 
@@ -114,44 +121,41 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
           : const Text('Nova Reunião'),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.save_rounded,
-              color: Colors.deepPurple.shade900
+              color: Colors.deepPurple
             ),
-            onPressed: saveOrUpdateMeeting,
+            onPressed: validateFields,
           ),
         ],
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 12),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              TextFormFieldWidget(
-                label: 'Descrição',
-                controller: _descricaoController,
-              ),
-              TextFormFieldWidget(
-                label: 'Entidade',
-                controller: _entidadeController,
-              ),
-              DropdownButtonFormFieldWidget(
-                value: widget.meeting?.diaSemana, // Se o objeto for nulo ele envia null para esta propriedade
-                label: 'Dia da Semana',
-                listItems: const ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
-                onChanged: (option) => _diaSemanaController.text = option!,
-              ),
-              Row(
-                children: [
-                  TimeListTileWidget(label: 'Início: ', controller: _horarioInicioController),
-                  const SizedBox(width: 16),
-                  TimeListTileWidget(label: 'Final: ', controller: _horarioTerminoController),
-                ]
-              ),
-            ],
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextFormFieldWidget(
+              label: 'Descrição',
+              controller: _descricaoController,
+            ),
+            TextFormFieldWidget(
+              label: 'Entidade',
+              controller: _entidadeController,
+            ),
+            DropdownButtonFormFieldWidget(
+              value: widget.meeting?.diaSemana, // Se o objeto for nulo ele envia null para esta propriedade
+              label: 'Dia da Semana',
+              listItems: const ['Segunda', 'Terça', 'Quarta', 'Quinta', 'Sexta', 'Sábado', 'Domingo'],
+              onChanged: (option) => _diaSemanaController.text = option!,
+            ),
+            Row(
+              children: [
+                TimeListTileWidget(label: 'Início: ', controller: _horarioInicioController),
+                const SizedBox(width: 16),
+                TimeListTileWidget(label: 'Final: ', controller: _horarioTerminoController),
+              ]
+            ),
+          ],
         ),
       ),
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import '../services/firebase_participant_service.dart';
 import '../models/participant_model.dart';
+import '../widgets/participant_list_tile_widget.dart';
+import '../pages/participant_detail_page.dart';
 
 class ParticipantPage extends StatefulWidget {
   const ParticipantPage({super.key});
@@ -10,14 +12,22 @@ class ParticipantPage extends StatefulWidget {
 }
 
 class _ParticipantPageState extends State<ParticipantPage> {
+
   late Stream<List<ParticipantModel>> participants;
   final firebaseParticipantService = FirebaseParticipantService.instance;
 
   Future<void> listParticipants() async {
     participants = firebaseParticipantService.listParticipants();
     setState(() => participants);
+  }
 
-    participants;
+  navigationToParticipantDetailPage() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const ParticipantDetailPage(),
+      ),
+    );
   }
 
   @override
@@ -30,19 +40,19 @@ class _ParticipantPageState extends State<ParticipantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Participantes'),
+        title: const Text('Participantes'),
         actions: [
           IconButton(
             icon: const Icon(
               Icons.person_add_alt_rounded,
               color: Colors.deepPurple,
             ),
-            onPressed: () {},
+            onPressed: () => navigationToParticipantDetailPage(),
           ),
         ]
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
           children: [
             Expanded(
@@ -50,13 +60,17 @@ class _ParticipantPageState extends State<ParticipantPage> {
                 stream: participants,
                 builder: (context, snapshot) {
                   if(!snapshot.hasData) {
-                    return const Center(child: Text('Não há participantes cadastrados'),);
+                    return const Center(child: Text('Não há participantes cadastrados'));
                   }
                   return ListView.builder(
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return Text(snapshot.data![index].nome);
+                      return ParticipantListTileWidget(
+                        participant: snapshot.data![index],
+                        onTap: () {},
+                        onPressedIcon: () {},
+                      );
                     },
                   );
                 },

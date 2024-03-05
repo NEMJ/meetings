@@ -22,7 +22,7 @@ class _MeetingPageState extends State<MeetingPage> {
     setState(() => meetings);
   }
 
-  navigationToMeetingPage(MeetingModel? meeting) {
+  navigationToMeetingDetailPage(MeetingModel? meeting) {
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -41,14 +41,14 @@ class _MeetingPageState extends State<MeetingPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Lista de Reuniões'),
+        title: const Text('Reuniões'),
         actions: [
           IconButton(
             icon: Icon(
               Icons.domain_add_rounded,
               color: Colors.deepPurple.shade900,
             ),
-            onPressed: () => navigationToMeetingPage(null),
+            onPressed: () => navigationToMeetingDetailPage(null),
           ),
         ]
       ),
@@ -67,17 +67,14 @@ class _MeetingPageState extends State<MeetingPage> {
                     shrinkWrap: true,
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: MeetingListTileWidget(
-                          meeting: snapshot.data![index],
-                          onTap: () => navigationToMeetingPage(snapshot.data![index]),
-                          onPressedIcon: () => showDialog(
-                            context: context,
-                            builder: (_) => ConfirmDeletionDialogWidget(
-                              title: 'Deseja realmente excluir a reunião ${snapshot.data![index].descricao}?',
-                              onDelete: () => firebaseMeetingService.deleteMeeting(snapshot.data![index].id),
-                            ),
+                      return MeetingListTileWidget(
+                        meeting: snapshot.data![index],
+                        onTap: () => navigationToMeetingDetailPage(snapshot.data![index]),
+                        onPressedIcon: () => showDialog(
+                          context: context,
+                          builder: (_) => ConfirmDeletionDialogWidget(
+                            title: 'Deseja realmente excluir a reunião ${snapshot.data![index].descricao}?',
+                            onDelete: () => firebaseMeetingService.deleteMeeting(snapshot.data![index].id),
                           ),
                         ),
                       );

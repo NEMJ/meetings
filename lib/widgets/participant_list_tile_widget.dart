@@ -1,44 +1,43 @@
 import 'package:flutter/material.dart';
-import '../models/meeting_model.dart';
+import '../models/participant_model.dart';
 
-class MeetingListTileWidget extends StatelessWidget {
-  const MeetingListTileWidget({
-    required this.meeting,
+class ParticipantListTileWidget extends StatelessWidget {
+  const ParticipantListTileWidget({
+    required this.participant,
     required this.onTap,
     required this.onPressedIcon,
     super.key
   });
 
-  final MeetingModel meeting;
+  final ParticipantModel participant;
   final Function()? onTap;
-  final void Function() onPressedIcon;
+  final Function() onPressedIcon;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
       child: ListTile(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
         contentPadding: const EdgeInsets.symmetric(horizontal: 22.0, vertical: 4.0),
         tileColor: const Color.fromARGB(255, 249, 245, 255),
-        leading: const CircleAvatar(child: Icon(Icons.business_rounded)),
+        leading: const CircleAvatar(child: Icon(Icons.person_rounded)),
         trailing: IconButton(
           icon: const Icon(Icons.remove_circle_outlined),
           color: Colors.red.shade300,
           onPressed: onPressedIcon,
         ),
-        minLeadingWidth: 45,
         title: Text(
-          meeting.descricao,
+          participant.nome,
           style: const TextStyle(
             color: Colors.black87,
             fontSize: 18,
             fontWeight: FontWeight.w500,
           ),
         ),
-        subtitle: Text('${meeting.diaSemana} - ${meeting.horarioInicio} as ${meeting.horarioTermino}'),
+        subtitle: Text(participant.tipoParticipante),
         onTap: onTap,
       ),
     );
