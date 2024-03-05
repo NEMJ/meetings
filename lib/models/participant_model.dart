@@ -25,6 +25,7 @@ class ParticipantModel {
     required this.reunioes,
     required this.nome,
     required this.apelido,
+    required this.dataNascimento,
     required this.rua,
     required this.bairro,
     required this.cidade,
@@ -34,7 +35,6 @@ class ParticipantModel {
     required this.profissao,
     required this.formProf,
     required this.localTrabalho,
-    required this.dataNascimento,
   });
 
   ParticipantModel.fromDocument(DocumentSnapshot doc) :
@@ -44,6 +44,7 @@ class ParticipantModel {
    reunioes = doc['reunioes'],
    nome = doc['nome'],
    apelido = doc['apelido'],
+   dataNascimento = doc['dataNascimento'],
    rua = doc['rua'],
    bairro = doc['bairro'],
    cidade = doc['cidade'],
@@ -52,8 +53,7 @@ class ParticipantModel {
    telFixo = doc['telFixo'],
    profissao = doc['profissao'],
    formProf = doc['formProf'],
-   localTrabalho = doc['localTrabalho'],
-   dataNascimento = doc['dataNascimento'];
+   localTrabalho = doc['localTrabalho'];
 
   Map<String, dynamic> toMap() {
     return {
@@ -63,6 +63,7 @@ class ParticipantModel {
       'reunioes' : reunioes,
       'nome' : nome,
       'apelido' : apelido,
+      'dataNascimento' : dataNascimento,
       'rua' : rua,
       'bairro' : bairro,
       'cidade' : cidade,
@@ -72,7 +73,6 @@ class ParticipantModel {
       'profissao' : profissao,
       'formProf' : formProf,
       'localTrabalho' : localTrabalho,
-      'dataNascimento' : dataNascimento,
     };
   }
 }

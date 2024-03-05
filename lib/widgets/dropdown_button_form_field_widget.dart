@@ -31,6 +31,7 @@ class DropdownButtonFormFieldWidget extends StatelessWidget {
         ).toList(),
         onChanged: onChanged,
         decoration: InputDecoration(
+          contentPadding: const EdgeInsets.all(18),
           floatingLabelBehavior: FloatingLabelBehavior.always,
           labelText: label,
           labelStyle: const TextStyle(
@@ -42,7 +43,7 @@ class DropdownButtonFormFieldWidget extends StatelessWidget {
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               color: Colors.grey.shade300,
-              width: 1.7,
+              width: 2,
             ),
           ),
         ),
