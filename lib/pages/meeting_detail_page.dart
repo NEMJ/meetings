@@ -123,7 +123,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
           IconButton(
             icon: const Icon(
               Icons.save_rounded,
-              color: Colors.deepPurple
+              color: Color.fromARGB(255, 92, 78, 158)
             ),
             onPressed: validateFields,
           ),

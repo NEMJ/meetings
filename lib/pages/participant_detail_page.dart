@@ -1,9 +1,15 @@
 import 'package:flutter/material.dart';
+import '../models/participant_model.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
 import '../widgets/text_form_field_widget.dart';
 
 class ParticipantDetailPage extends StatefulWidget {
-  const ParticipantDetailPage({super.key});
+  final ParticipantModel? participant;
+
+  const ParticipantDetailPage({
+    this.participant,
+    super.key,
+  });
 
   @override
   State<ParticipantDetailPage> createState() => _ParticipantDetailPageState();
@@ -12,8 +18,8 @@ class ParticipantDetailPage extends StatefulWidget {
 class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
   String refImage = '';
-  List<Object> reunioes = [];
-  String? uf;
+  late List<dynamic> reunioes;
+  late String? uf;
 
   final _tipoParticipanteController = TextEditingController();
   final _nomeController = TextEditingController();
@@ -29,6 +35,30 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   final _localTrabalhoController = TextEditingController();
 
   @override
+  void initState() {
+    if(widget.participant != null) {
+      _tipoParticipanteController.text = widget.participant!.tipoParticipante;
+      _nomeController.text = widget.participant!.nome;
+      _apelidoController.text = widget.participant!.apelido;
+      _dataNascimentoController.text = widget.participant!.dataNascimento;
+      _ruaController.text = widget.participant!.rua;
+      _bairroController.text = widget.participant!.bairro;
+      _cidadeController.text = widget.participant!.cidade;
+      _contatoController.text = widget.participant!.contato;
+      _telFixoController.text = widget.participant!.telFixo;
+      _profissaoController.text = widget.participant!.profissao;
+      _formProfController.text = widget.participant!.formProf;
+      _localTrabalhoController.text = widget.participant!.localTrabalho;
+
+      refImage = widget.participant!.refImage;
+      reunioes = widget.participant!.reunioes;
+      uf = widget.participant!.uf;
+    }
+    
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -37,7 +67,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
           IconButton(
             icon: const Icon(
               Icons.save_rounded,
-              color: Colors.deepPurple
+              color: Color.fromARGB(255, 92, 78, 158)
             ),
             onPressed: () {},
           )
@@ -78,6 +108,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                   const SizedBox(width: 12),
                   Flexible(
                     child: DropdownButtonFormFieldWidget(
+                      value: widget.participant?.tipoParticipante,
                       label: 'Tipo Participante',
                       listItems: const ['Dirigente', 'Entidade', 'Participante'],
                       onChanged: (option) => _tipoParticipanteController.text = option!,
@@ -89,6 +120,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                 children: [
                   Flexible(
                     child: DropdownButtonFormFieldWidget(
+                      value: widget.participant?.uf,
                       label: 'UF',
                       listItems: const [
                         'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO',

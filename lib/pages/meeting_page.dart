@@ -44,9 +44,9 @@ class _MeetingPageState extends State<MeetingPage> {
         title: const Text('Reuniões'),
         actions: [
           IconButton(
-            icon: Icon(
+            icon: const Icon(
               Icons.domain_add_rounded,
-              color: Colors.deepPurple.shade900,
+              color: Color.fromARGB(255, 92, 78, 158),
             ),
             onPressed: () => navigationToMeetingDetailPage(null),
           ),

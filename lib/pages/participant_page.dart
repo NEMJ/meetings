@@ -21,11 +21,11 @@ class _ParticipantPageState extends State<ParticipantPage> {
     setState(() => participants);
   }
 
-  navigationToParticipantDetailPage() {
+  navigationToParticipantDetailPage(ParticipantModel? participant) {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => const ParticipantDetailPage(),
+        builder: (context) => ParticipantDetailPage(participant: participant),
       ),
     );
   }
@@ -45,9 +45,9 @@ class _ParticipantPageState extends State<ParticipantPage> {
           IconButton(
             icon: const Icon(
               Icons.person_add_alt_rounded,
-              color: Colors.deepPurple,
+              color: Color.fromARGB(255, 92, 78, 158),
             ),
-            onPressed: () => navigationToParticipantDetailPage(),
+            onPressed: () => navigationToParticipantDetailPage(null),
           ),
         ]
       ),
@@ -68,7 +68,7 @@ class _ParticipantPageState extends State<ParticipantPage> {
                     itemBuilder: (context, index) {
                       return ParticipantListTileWidget(
                         participant: snapshot.data![index],
-                        onTap: () {},
+                        onTap: () => navigationToParticipantDetailPage(snapshot.data![index]),
                         onPressedIcon: () {},
                       );
                     },
