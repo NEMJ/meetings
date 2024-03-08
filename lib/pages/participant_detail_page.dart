@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
+import '../services/firebase_participant_service.dart';
 import '../models/participant_model.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
 import '../widgets/text_form_field_widget.dart';
@@ -18,8 +20,10 @@ class ParticipantDetailPage extends StatefulWidget {
 class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
   String refImage = '';
-  late List<dynamic> reunioes;
-  late String? uf;
+  List<dynamic> reunioes = [];
+  String uf = '';
+
+  final firebaseParticipantService = FirebaseParticipantService.instance;
 
   final _tipoParticipanteController = TextEditingController();
   final _nomeController = TextEditingController();
@@ -33,6 +37,84 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   final _profissaoController = TextEditingController();
   final _formProfController = TextEditingController();
   final _localTrabalhoController = TextEditingController();
+
+  ParticipantModel buildParticipant() {
+    final participantID = (widget.participant != null) ? widget.participant!.id : const Uuid().v1();
+
+    return ParticipantModel(
+      id: participantID,
+      refImage: refImage,
+      tipoParticipante: _tipoParticipanteController.text,
+      reunioes: reunioes,
+      nome: _nomeController.text,
+      apelido: _apelidoController.text,
+      rua: _ruaController.text,
+      bairro: _bairroController.text,
+      cidade: _cidadeController.text,
+      uf: uf,
+      contato: _contatoController.text,
+      telFixo: _telFixoController.text,
+      profissao: _profissaoController.text,
+      formProf: _formProfController.text,
+      localTrabalho: _localTrabalhoController.text,
+      dataNascimento: _dataNascimentoController.text,
+    );
+  }
+
+  validadeRequiredFields() {
+    bool requiredFieldsFilled = 
+      _nomeController.text.isNotEmpty ||
+      _contatoController.text.isNotEmpty;
+
+    if (!requiredFieldsFilled) {
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          title: const Text('Preencha os campos obrigatórios NOME e CONTATO'),
+          actions: [
+            ElevatedButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      done();
+    }
+  }
+
+  done() {
+    ParticipantModel participantModel = buildParticipant();
+
+    if (widget.participant == null) {
+      saveParticipant(participantModel);
+    } else {
+      updateParticipant(participantModel);
+    }
+  }
+
+  saveParticipant(ParticipantModel participant) {
+    firebaseParticipantService.saveParticipant(participant)
+      .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Participante ${_nomeController.text} salvo com sucesso'),
+        ),
+      ));
+    
+    Navigator.of(context).pop();
+  }
+
+  updateParticipant(ParticipantModel participant) {
+    firebaseParticipantService.updateParticipant(participant)
+      .then((value) => ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Participante ${_nomeController.text} atualizado com sucesso'),
+        ),
+      ));
+    
+    Navigator.of(context).pop();
+  }
 
   @override
   void initState() {
@@ -69,7 +151,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
               Icons.save_rounded,
               color: Color.fromARGB(255, 92, 78, 158)
             ),
-            onPressed: () {},
+            onPressed: validadeRequiredFields,
           )
         ],
       ),
@@ -108,7 +190,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                   const SizedBox(width: 12),
                   Flexible(
                     child: DropdownButtonFormFieldWidget(
-                      value: widget.participant?.tipoParticipante,
+                      value: widget.participant?.tipoParticipante ?? 'Participante',
                       label: 'Tipo Participante',
                       listItems: const ['Dirigente', 'Entidade', 'Participante'],
                       onChanged: (option) => _tipoParticipanteController.text = option!,
@@ -123,7 +205,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                       value: widget.participant?.uf,
                       label: 'UF',
                       listItems: const [
-                        'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO',
+                        '', 'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO',
                         'MA', 'MG', 'MS', 'MT', 'PA','PB', 'PE', 'PI',  'PR',
                         'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'
                       ],

@@ -82,8 +82,8 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
   saveMeeting(MeetingModel meeting) {
     firebaseMeetingService.saveMeeting(meeting)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar
-          (content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
+        SnackBar(
+          content: Text('Reunião "${_descricaoController.text}" salva com sucesso'),
         ),
       ));
 
@@ -97,6 +97,7 @@ class _MeetingDetailPageState extends State<MeetingDetailPage> {
           content: Text('Reunião "${_descricaoController.text}" atualizada com sucesso'),
         ),
       ));
+      
     Navigator.of(context).pop();
   }
 

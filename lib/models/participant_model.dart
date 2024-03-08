@@ -10,7 +10,7 @@ class ParticipantModel {
   final String rua;
   final String bairro;
   final String cidade;
-  final String? uf;
+  final String uf;
   final String contato;
   final String telFixo;
   final String profissao;
