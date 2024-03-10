@@ -21,9 +21,16 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
   String refImage = '';
   List<dynamic> reunioes = [];
+  List<String> ufsList = const [
+    '', 'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS',
+    'MT', 'PA','PB', 'PE', 'PI',  'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC',
+    'SE', 'SP', 'TO',
+  ];
   String uf = '';
 
   final firebaseParticipantService = FirebaseParticipantService.instance;
+
+  final _formKey = GlobalKey<FormState>();
 
   final _tipoParticipanteController = TextEditingController();
   final _nomeController = TextEditingController();
@@ -39,12 +46,17 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   final _localTrabalhoController = TextEditingController();
 
   ParticipantModel buildParticipant() {
-    final participantID = (widget.participant != null) ? widget.participant!.id : const Uuid().v1();
+    final participantID = (widget.participant != null)
+      ? widget.participant!.id : const Uuid().v1();
+
+    final participantType = _tipoParticipanteController.text.isNotEmpty
+      ? _tipoParticipanteController.text
+      : 'Participante';
 
     return ParticipantModel(
       id: participantID,
       refImage: refImage,
-      tipoParticipante: _tipoParticipanteController.text,
+      tipoParticipante: participantType,
       reunioes: reunioes,
       nome: _nomeController.text,
       apelido: _apelidoController.text,
@@ -62,15 +74,13 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   }
 
   validadeRequiredFields() {
-    bool requiredFieldsFilled = 
-      _nomeController.text.isNotEmpty ||
-      _contatoController.text.isNotEmpty;
+    bool validated = _formKey.currentState!.validate();
 
-    if (!requiredFieldsFilled) {
+    if (!validated) {
       showDialog(
         context: context,
         builder: (_) => AlertDialog(
-          title: const Text('Preencha os campos obrigatórios NOME e CONTATO'),
+          title: const Text('Preencha os campos obrigatórios'),
           actions: [
             ElevatedButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -158,76 +168,90 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 16, 12, 0),
-          child: Column(
-            children: [
-              TextFormFieldWidget(label: 'Nome', controller: _nomeController),
-              TextFormFieldWidget(label: 'Apelido', controller: _apelidoController),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextFormFieldWidget(
-                      label: 'Contato',
-                      controller: _contatoController,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                TextFormFieldWidget(
+                  label: 'Nome', controller: _nomeController, validator: true,
+                ),
+                TextFormFieldWidget(
+                  label: 'Apelido', controller: _apelidoController,
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: TextFormFieldWidget(
+                        label: 'Contato',
+                        controller: _contatoController,
+                        validator: true,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: TextFormFieldWidget(
-                      label: 'Telefone',
-                      controller: _telFixoController,
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: TextFormFieldWidget(
+                        label: 'Telefone',
+                        controller: _telFixoController,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: TextFormFieldWidget(
-                      label: 'Data Nascimento',
-                      controller: _dataNascimentoController,
+                  ],
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: TextFormFieldWidget(
+                        label: 'Data Nascimento',
+                        controller: _dataNascimentoController,
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    child: DropdownButtonFormFieldWidget(
-                      value: widget.participant?.tipoParticipante ?? 'Participante',
-                      label: 'Tipo Participante',
-                      listItems: const ['Dirigente', 'Entidade', 'Participante'],
-                      onChanged: (option) => _tipoParticipanteController.text = option!,
-                    )
-                  ),
-                ]
-              ),
-              Row(
-                children: [
-                  Flexible(
-                    child: DropdownButtonFormFieldWidget(
-                      value: widget.participant?.uf,
-                      label: 'UF',
-                      listItems: const [
-                        '', 'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO',
-                        'MA', 'MG', 'MS', 'MT', 'PA','PB', 'PE', 'PI',  'PR',
-                        'RJ', 'RN', 'RO', 'RR', 'RS', 'SC', 'SE', 'SP', 'TO'
-                      ],
-                      onChanged: (option) {},
+                    const SizedBox(width: 12),
+                    Flexible(
+                      child: DropdownButtonFormFieldWidget(
+                        value: widget.participant?.tipoParticipante ?? 'Participante',
+                        label: 'Tipo Participante',
+                        listItems: const ['Dirigente', 'Entidade', 'Participante'],
+                        onChanged: (option) => _tipoParticipanteController.text = option!,
+                      )
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Flexible(
-                    flex: 3,
-                    child: TextFormFieldWidget(
-                      label: 'Cidade',
-                      controller: _cidadeController,
+                  ]
+                ),
+                Row(
+                  children: [
+                    Flexible(
+                      child: DropdownButtonFormFieldWidget(
+                        value: widget.participant?.uf,
+                        label: 'UF',
+                        listItems: ufsList,
+                        onChanged: (option) {},
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              TextFormFieldWidget(label: 'Rua', controller: _ruaController),
-              TextFormFieldWidget(label: 'Bairro', controller: _bairroController),
-              TextFormFieldWidget(label: 'Profissão', controller: _profissaoController),
-              TextFormFieldWidget(label: 'Formação Profissional', controller: _formProfController),
-              TextFormFieldWidget(label: 'Local de Trabalho', controller: _localTrabalhoController),
-            ]
+                    const SizedBox(width: 12),
+                    Flexible(
+                      flex: 3,
+                      child: TextFormFieldWidget(
+                        label: 'Cidade',
+                        controller: _cidadeController,
+                      ),
+                    ),
+                  ],
+                ),
+                TextFormFieldWidget(
+                  label: 'Rua', controller: _ruaController,
+                ),
+                TextFormFieldWidget(
+                  label: 'Bairro', controller: _bairroController,
+                ),
+                TextFormFieldWidget(
+                  label: 'Profissão', controller: _profissaoController,
+                ),
+                TextFormFieldWidget(
+                  label: 'Formação Profissional', controller: _formProfController,
+                ),
+                TextFormFieldWidget(
+                  label: 'Local de Trabalho', controller: _localTrabalhoController,
+                ),
+              ]
+            ),
           ),
         ),
       ),
