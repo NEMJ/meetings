@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../services/firebase_participant_service.dart';
+import '../services/firebase_meeting_service.dart';
+import '../models/meeting_model.dart';
 import '../models/participant_model.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
 import '../widgets/text_form_field_widget.dart';
@@ -29,6 +31,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   String uf = '';
 
   final firebaseParticipantService = FirebaseParticipantService.instance;
+  final firebaseMeetingService = FirebaseMeetingService.instance;
 
   final _formKey = GlobalKey<FormState>();
 
@@ -57,7 +60,8 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       id: participantID,
       refImage: refImage,
       tipoParticipante: participantType,
-      reunioes: reunioes,
+      // reunioes: reunioes.map((e) => e.toMap()).toList(),
+      reunioes: [],
       nome: _nomeController.text,
       apelido: _apelidoController.text,
       rua: _ruaController.text,
@@ -126,6 +130,26 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     Navigator.of(context).pop();
   }
 
+  getListMeetings() async {
+    reunioes = await firebaseMeetingService.listMeetings().first;
+  }
+
+  showListMeetings() {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        scrollable: true,
+        title: const Text('Lista de Reuniões'),
+        content: Column(
+          children: [
+            for(MeetingModel reuniao in reunioes)
+              ListTile(title: Text(reuniao.descricao)),
+          ]
+        ),
+      ),
+    );
+  }
+
   @override
   void initState() {
     if(widget.participant != null) {
@@ -146,6 +170,8 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       reunioes = widget.participant!.reunioes;
       uf = widget.participant!.uf;
     }
+
+    getListMeetings();
     
     super.initState();
   }
@@ -156,12 +182,29 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       appBar: AppBar(
         title: const Text('Novo Participante'),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.save_rounded,
-              color: Color.fromARGB(255, 92, 78, 158)
-            ),
-            onPressed: validadeRequiredFields,
+          PopupMenuButton(
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                onTap: validadeRequiredFields,
+                child: const ListTile(
+                  title: Text('Salvar Alterações'),
+                  leading: Icon(
+                    Icons.save_rounded,
+                    color: Color.fromARGB(255, 92, 78, 158)
+                  ),
+                ),
+              ),
+              PopupMenuItem(
+                onTap: showListMeetings,
+                child: const ListTile(
+                  title: Text('Reuniões'),
+                  leading: Icon(
+                    Icons.business_rounded,
+                    color: Color.fromARGB(255, 92, 78, 158),
+                  ),
+                ),
+              ),
+            ]
           )
         ],
       ),
@@ -250,6 +293,11 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                 TextFormFieldWidget(
                   label: 'Local de Trabalho', controller: _localTrabalhoController,
                 ),
+                FilledButton.tonal(
+                  onPressed: showListMeetings,
+                  child: const Text('Selecione uma Reunião'),
+                ),
+                const SizedBox(height: 16),
               ]
             ),
           ),
