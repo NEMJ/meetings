@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../services/firebase_participant_service.dart';
 import '../models/participant_model.dart';
+import '../widgets/confirm_deletion_dialog_widget.dart';
 import '../widgets/participant_list_tile_widget.dart';
 import '../pages/participant_detail_page.dart';
 
@@ -69,7 +70,13 @@ class _ParticipantPageState extends State<ParticipantPage> {
                       return ParticipantListTileWidget(
                         participant: snapshot.data![index],
                         onTap: () => navigationToParticipantDetailPage(snapshot.data![index]),
-                        onPressedIcon: () {},
+                        onPressedIcon: () => showDialog(
+                          context: context,
+                          builder: (_) => ConfirmDeletionDialogWidget(
+                            title: 'Deseja realmente excluir o participante ${snapshot.data![index].nome}?',
+                            onDelete: () => firebaseParticipantService.deleteParticipant(snapshot.data![index].id),
+                          ),
+                        ),
                       );
                     },
                   );
