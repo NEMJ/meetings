@@ -23,12 +23,12 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
   String refImage = '';
   List<dynamic> reunioes = [];
+  String? uf;
   List<String> ufsList = const [
     '', 'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS',
     'MT', 'PA','PB', 'PE', 'PI',  'PR', 'RJ', 'RN', 'RO', 'RR', 'RS', 'SC',
     'SE', 'SP', 'TO',
   ];
-  String uf = '';
 
   final firebaseParticipantService = FirebaseParticipantService.instance;
   final firebaseMeetingService = FirebaseMeetingService.instance;
@@ -67,7 +67,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       rua: _ruaController.text,
       bairro: _bairroController.text,
       cidade: _cidadeController.text,
-      uf: uf,
+      uf: uf ?? '',
       contato: _contatoController.text,
       telFixo: _telFixoController.text,
       profissao: _profissaoController.text,
@@ -197,7 +197,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
               PopupMenuItem(
                 onTap: showListMeetings,
                 child: const ListTile(
-                  title: Text('Reuniões'),
+                  title: Text('Selecionar Reuniões'),
                   leading: Icon(
                     Icons.business_rounded,
                     color: Color.fromARGB(255, 92, 78, 158),
@@ -265,7 +265,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                         value: widget.participant?.uf,
                         label: 'UF',
                         listItems: ufsList,
-                        onChanged: (option) {},
+                        onChanged: (option) => setState(() => uf = option),
                       ),
                     ),
                     const SizedBox(width: 12),
@@ -293,11 +293,6 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
                 TextFormFieldWidget(
                   label: 'Local de Trabalho', controller: _localTrabalhoController,
                 ),
-                FilledButton.tonal(
-                  onPressed: showListMeetings,
-                  child: const Text('Selecione uma Reunião'),
-                ),
-                const SizedBox(height: 16),
               ]
             ),
           ),
