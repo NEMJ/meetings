@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import '../services/firebase_participant_service.dart';
 import '../services/firebase_meeting_service.dart';
-import '../models/meeting_model.dart';
 import '../models/participant_model.dart';
+import '../models/checkbox_model.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
 import '../widgets/text_form_field_widget.dart';
+import '../widgets/checkbox_widget.dart';
 
 class ParticipantDetailPage extends StatefulWidget {
   final ParticipantModel? participant;
@@ -23,6 +24,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
   String refImage = '';
   List<dynamic> reunioes = [];
+  List<CheckboxModel> checkboxMeetingsList = [];
   String? uf;
   List<String> ufsList = const [
     '', 'AC', 'AL', 'AM', 'AP', 'BA', 'CE', 'DF', 'ES', 'GO', 'MA', 'MG', 'MS',
@@ -60,8 +62,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       id: participantID,
       refImage: refImage,
       tipoParticipante: participantType,
-      // reunioes: reunioes.map((e) => e.toMap()).toList(),
-      reunioes: [],
+      reunioes: getMeetingsChecked(),
       nome: _nomeController.text,
       apelido: _apelidoController.text,
       rua: _ruaController.text,
@@ -130,8 +131,25 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     Navigator.of(context).pop();
   }
 
-  getListMeetings() async {
+  getCheckboxModelListMeetings() async {
     reunioes = await firebaseMeetingService.listMeetings().first;
+    reunioes.forEach((reuniao) {
+      checkboxMeetingsList.add(
+        CheckboxModel(id: reuniao.id, title: reuniao.descricao),
+      );
+    });
+  }
+
+  List<Map<String, dynamic>> getMeetingsChecked() {
+    List<Map<String, dynamic>> reunioesMarcadas = [];
+
+    checkboxMeetingsList.forEach((reuniao) {
+      if (reuniao.value == true) {
+        reunioesMarcadas.add(reuniao.toMap());
+      }
+    });
+
+    return reunioesMarcadas;
   }
 
   showListMeetings() {
@@ -142,8 +160,16 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
         title: const Text('Lista de Reuniões'),
         content: Column(
           children: [
-            for(MeetingModel reuniao in reunioes)
-              ListTile(title: Text(reuniao.descricao)),
+            for(CheckboxModel reuniao in checkboxMeetingsList)
+              CheckboxWidget(
+                meetingCheckbox: reuniao,
+              ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
           ]
         ),
       ),
@@ -171,7 +197,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       uf = widget.participant!.uf;
     }
 
-    getListMeetings();
+    getCheckboxModelListMeetings();
     
     super.initState();
   }
