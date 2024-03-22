@@ -60,7 +60,9 @@ class _ParticipantPageState extends State<ParticipantPage> {
               child: StreamBuilder<List<ParticipantModel>>(
                 stream: participants,
                 builder: (context, snapshot) {
-                  if(!snapshot.hasData) {
+                  if(snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if(!snapshot.hasData) {
                     return const Center(child: Text('Não há participantes cadastrados'));
                   }
                   return ListView.builder(

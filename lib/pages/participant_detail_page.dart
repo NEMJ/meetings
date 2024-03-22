@@ -132,10 +132,30 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   }
 
   getCheckboxModelListMeetings() async {
+    // Pega todas as reuniões cadastradas até o momento de entrar na página de detalhes do participante
     reunioes = await firebaseMeetingService.listMeetings().first;
+    // Lista auxiliar para manipulação das reuniões marcadas
+    List<String> aux = [];
+
+    // A lista aux é povoada se for um participante já cadastrado.
+    if(widget.participant != null) {
+      widget.participant!.reunioes.forEach((reuniao) => aux.add(reuniao['id']));
+    }
+    
+    // Percorre a lista de todas as reuniões
     reunioes.forEach((reuniao) {
+      // variável para controlar a marcação das reuniões que já vem do participante
+      bool value = false;
+
+      // se o id da reunião da vez estiver na lista que veio do particiapnte,
+      // esta reunião é marcada na listagem final de apresentação visual ao usuário.
+      if(aux.contains(reuniao.id)) {
+        value = true;
+      }
+
+      // a lista de objetos CheckBox é marcada com as informações processadas para cada elemento
       checkboxMeetingsList.add(
-        CheckboxModel(id: reuniao.id, title: reuniao.descricao),
+        CheckboxModel(id: reuniao.id, title: reuniao.descricao, value: value),
       );
     });
   }
@@ -193,7 +213,6 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       _localTrabalhoController.text = widget.participant!.localTrabalho;
 
       refImage = widget.participant!.refImage;
-      reunioes = widget.participant!.reunioes;
       uf = widget.participant!.uf;
     }
 
@@ -206,7 +225,9 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Novo Participante'),
+        title: (widget.participant != null)
+          ? Text(widget.participant!.nome)
+          : const Text('Novo Participante'),
         actions: [
           PopupMenuButton(
             itemBuilder: (context) => [
