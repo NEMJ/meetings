@@ -7,6 +7,7 @@ import '../models/checkbox_model.dart';
 import '../widgets/dropdown_button_form_field_widget.dart';
 import '../widgets/text_form_field_widget.dart';
 import '../widgets/checkbox_widget.dart';
+import '../widgets/user_image_widget.dart';
 
 class ParticipantDetailPage extends StatefulWidget {
   final ParticipantModel? participant;
@@ -262,6 +263,8 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
             key: _formKey,
             child: Column(
               children: [
+                const UserImageWidget(),
+                const SizedBox(height: 18),
                 TextFormFieldWidget(
                   label: 'Nome', controller: _nomeController, validator: true,
                 ),
