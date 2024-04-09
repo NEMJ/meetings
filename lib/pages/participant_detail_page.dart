@@ -1,5 +1,7 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+import 'package:image_picker/image_picker.dart';
 import '../services/firebase_participant_service.dart';
 import '../services/firebase_meeting_service.dart';
 import '../models/participant_model.dart';
@@ -50,6 +52,12 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   final _profissaoController = TextEditingController();
   final _formProfController = TextEditingController();
   final _localTrabalhoController = TextEditingController();
+
+  XFile? userPhoto;
+  ImageProvider accountPhoto = Image.asset(
+    "images/user_account.png",
+    fit: BoxFit.cover,
+  ).image;
 
   ParticipantModel buildParticipant() {
     final participantID = (widget.participant != null)
@@ -197,6 +205,17 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     );
   }
 
+  editPhoto() async {
+    final ImagePicker picker = ImagePicker();
+
+    try {
+      XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
+      if(imageFile != null) setState(() => accountPhoto = FileImage(File(imageFile.path)));
+    } catch(e) {
+      print(e);
+    }
+  }
+
   @override
   void initState() {
     if(widget.participant != null) {
@@ -263,7 +282,10 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
             key: _formKey,
             child: Column(
               children: [
-                const UserImageWidget(),
+                UserImageWidget(
+                  image: accountPhoto,
+                  editPhoto: editPhoto,
+                ),
                 const SizedBox(height: 18),
                 TextFormFieldWidget(
                   label: 'Nome', controller: _nomeController, validator: true,

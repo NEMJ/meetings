@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class UserImageWidget extends StatefulWidget {
-  const UserImageWidget({super.key});
+  const UserImageWidget({
+    required this.editPhoto,
+    required this.image,
+    super.key
+  });
+
+  final Function() editPhoto;
+  final ImageProvider image;
 
   @override
   State<UserImageWidget> createState() => _UserImageWidgetState();
@@ -28,10 +35,8 @@ class _UserImageWidgetState extends State<UserImageWidget> {
               ],
               shape: BoxShape.circle,
               image: DecorationImage(
-                image: Image.asset(
-                  "images/user_account.png",
-                  fit: BoxFit.cover,
-                ).image
+                image: widget.image,
+                fit: BoxFit.cover,
               ),
             ),
           ),
@@ -53,7 +58,7 @@ class _UserImageWidgetState extends State<UserImageWidget> {
               padding: const EdgeInsets.only(top: 0),
               icon: const Icon(Icons.edit),
               color: Colors.white,
-              onPressed: () {},
+              onPressed: widget.editPhoto,
             ),
             ),
           ),
