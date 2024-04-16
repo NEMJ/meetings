@@ -118,7 +118,11 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     }
   }
 
-  saveParticipant(ParticipantModel participant) {
+  saveParticipant(ParticipantModel participant) async {
+    if (userPhoto != null) {
+      await uploadUserPhoto(userPhoto!.path, participant.id);
+    }
+
     firebaseParticipantService.saveParticipant(participant)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -129,7 +133,11 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     Navigator.of(context).pop();
   }
 
-  updateParticipant(ParticipantModel participant) {
+  updateParticipant(ParticipantModel participant) async {
+    if (userPhoto != null) {
+      await uploadUserPhoto(userPhoto!.path, participant.id);
+    }
+
     firebaseParticipantService.updateParticipant(participant)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -209,11 +217,15 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     final ImagePicker picker = ImagePicker();
 
     try {
-      XFile? imageFile = await picker.pickImage(source: ImageSource.gallery);
-      if(imageFile != null) setState(() => accountPhoto = FileImage(File(imageFile.path)));
+      userPhoto = await picker.pickImage(source: ImageSource.gallery);
+      if(userPhoto != null) setState(() => accountPhoto = FileImage(File(userPhoto!.path)));
     } catch(e) {
       print(e);
     }
+  }
+
+  uploadUserPhoto(String photoPath, String photoName) async {
+    await firebaseParticipantService.uploadUserPhoto(photoPath, photoName);
   }
 
   @override
