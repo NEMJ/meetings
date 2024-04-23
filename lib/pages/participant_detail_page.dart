@@ -25,7 +25,7 @@ class ParticipantDetailPage extends StatefulWidget {
 
 class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
-  String refImage = '';
+  String refImage = 'a';
   List<dynamic> reunioes = [];
   List<CheckboxModel> checkboxMeetingsList = [];
   String? uf;
@@ -119,9 +119,11 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   }
 
   saveParticipant(ParticipantModel participant) async {
-    if (userPhoto != null) {
-      await uploadUserPhoto(userPhoto!.path, participant.id);
-    }
+    await uploadUserPhotoAndGetURL(participant.id);
+
+    // O participante é criado antes do envio da imagem, por iso alterar a propriedade
+    // refImage é necessária neste ponto.
+    participant.refImage = refImage;
 
     firebaseParticipantService.saveParticipant(participant)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
@@ -134,9 +136,11 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
   }
 
   updateParticipant(ParticipantModel participant) async {
-    if (userPhoto != null) {
-      await uploadUserPhoto(userPhoto!.path, participant.id);
-    }
+    await uploadUserPhotoAndGetURL(participant.id);
+
+    // O participante é criado antes do envio da imagem, por iso alterar a propriedade
+    // refImage é necessária neste ponto.
+    participant.refImage = refImage;
 
     firebaseParticipantService.updateParticipant(participant)
       .then((value) => ScaffoldMessenger.of(context).showSnackBar(
@@ -224,8 +228,16 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     }
   }
 
-  uploadUserPhoto(String photoPath, String photoName) async {
-    await firebaseParticipantService.uploadUserPhoto(photoPath, photoName);
+  uploadUserPhotoAndGetURL(String photoName) async {
+    if (userPhoto != null) {
+      String? downloadURL = await firebaseParticipantService.uploadUserPhotoAndGetURL(userPhoto!.path, photoName);
+      
+      if(downloadURL != null) {
+        refImage = downloadURL;
+      } else {
+        print('Erro ao ao obter a URL de download da imagem!');
+      }
+    }
   }
 
   @override

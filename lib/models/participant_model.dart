@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ParticipantModel {
   final String id;
-  final String refImage;
+  String refImage;
   final String tipoParticipante;
   final List<dynamic> reunioes;
   final String nome;
@@ -18,7 +18,7 @@ class ParticipantModel {
   final String localTrabalho;
   final String dataNascimento;
 
-  const ParticipantModel({
+  ParticipantModel({
     required this.id,
     required this.refImage,
     required this.tipoParticipante,

@@ -36,12 +36,13 @@ class FirebaseParticipantService {
     await _collection.doc(participantId).delete();
   }
 
-  Future<UploadTask> uploadUserPhoto(String photoPath, String photoName) async {
+  Future<String?> uploadUserPhotoAndGetURL(String photoPath, String photoName) async {
     File userPhoto = File(photoPath);
 
     try {
       String ref = 'images/$photoName.jpg';
-      return _storage.ref(ref).putFile(userPhoto);
+      await _storage.ref(ref).putFile(userPhoto);
+      return await _storage.ref(ref).getDownloadURL();
     } on FirebaseException catch (err) {
       throw Exception('Erro no upload: ${err.code}');
     }
