@@ -16,6 +16,7 @@ class _ParticipantPageState extends State<ParticipantPage> {
 
   late Stream<List<ParticipantModel>> participants;
   final firebaseParticipantService = FirebaseParticipantService.instance;
+  ImageProvider? userImage;
 
   Future<void> listParticipants() async {
     participants = firebaseParticipantService.listParticipants();
@@ -29,6 +30,15 @@ class _ParticipantPageState extends State<ParticipantPage> {
         builder: (context) => ParticipantDetailPage(participant: participant),
       ),
     );
+  }
+
+  ImageProvider? getUserPhoto(String urlUserImage) {
+    userImage = null;
+    
+    if(urlUserImage != '') {
+      userImage = NetworkImage(urlUserImage);
+    }
+    return userImage;
   }
 
   @override
@@ -70,6 +80,7 @@ class _ParticipantPageState extends State<ParticipantPage> {
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return ParticipantListTileWidget(
+                        userPhoto: getUserPhoto(snapshot.data![index].refImage),
                         participant: snapshot.data![index],
                         onTap: () => navigationToParticipantDetailPage(snapshot.data![index]),
                         onPressedIcon: () => showDialog(

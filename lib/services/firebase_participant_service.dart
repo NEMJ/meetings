@@ -41,7 +41,10 @@ class FirebaseParticipantService {
 
     try {
       String ref = 'images/$photoName.jpg';
-      await _storage.ref(ref).putFile(userPhoto);
+      await _storage.ref(ref).putFile(
+        userPhoto, 
+        SettableMetadata(cacheControl: "public, max-age=900"));
+        // Está especificado o tempo que a imagem ficará em cache sendo manipulada pelo Firebase atrelado ao projeto
       return await _storage.ref(ref).getDownloadURL();
     } on FirebaseException catch (err) {
       throw Exception('Erro no upload: ${err.code}');

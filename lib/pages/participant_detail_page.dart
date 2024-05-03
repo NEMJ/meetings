@@ -13,9 +13,11 @@ import '../widgets/user_image_widget.dart';
 
 class ParticipantDetailPage extends StatefulWidget {
   final ParticipantModel? participant;
+  final ImageProvider? userImage;
 
   const ParticipantDetailPage({
     this.participant,
+    this.userImage,
     super.key,
   });
 
@@ -85,6 +87,12 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
       localTrabalho: _localTrabalhoController.text,
       dataNascimento: _dataNascimentoController.text,
     );
+  }
+
+  getUserPhoto() {
+    if (widget.participant != null && widget.participant!.refImage != '') {
+      accountPhoto = NetworkImage(widget.participant!.refImage);
+    }
   }
 
   validadeRequiredFields() {
@@ -261,6 +269,7 @@ class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
     }
 
     getCheckboxModelListMeetings();
+    getUserPhoto();
     
     super.initState();
   }
