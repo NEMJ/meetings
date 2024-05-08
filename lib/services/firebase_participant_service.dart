@@ -50,4 +50,8 @@ class FirebaseParticipantService {
       throw Exception('Erro no upload: ${err.code}');
     }
   }
+
+  Future<void> deleteUserImage(String url) async {
+    await _storage.refFromURL(url).delete();
+  }
 }

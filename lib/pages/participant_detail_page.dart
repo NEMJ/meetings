@@ -27,7 +27,7 @@ class ParticipantDetailPage extends StatefulWidget {
 
 class _ParticipantDetailPageState extends State<ParticipantDetailPage> {
 
-  String refImage = 'a';
+  String refImage = '';
   List<dynamic> reunioes = [];
   List<CheckboxModel> checkboxMeetingsList = [];
   String? uf;

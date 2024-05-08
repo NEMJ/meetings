@@ -87,7 +87,12 @@ class _ParticipantPageState extends State<ParticipantPage> {
                           context: context,
                           builder: (_) => ConfirmDeletionDialogWidget(
                             title: 'Deseja realmente excluir o participante ${snapshot.data![index].nome}?',
-                            onDelete: () => firebaseParticipantService.deleteParticipant(snapshot.data![index].id),
+                            onDelete: () {
+                              firebaseParticipantService.deleteParticipant(snapshot.data![index].id);
+                              if (snapshot.data![index].refImage != '') {
+                                firebaseParticipantService.deleteUserImage(snapshot.data![index].refImage);
+                              }
+                            },
                           ),
                         ),
                       );
