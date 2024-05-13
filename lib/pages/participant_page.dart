@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/firebase_participant_service.dart';
+import '../models/custom_search_delegate.dart';
 import '../models/participant_model.dart';
 import '../widgets/confirm_deletion_dialog_widget.dart';
 import '../widgets/participant_list_tile_widget.dart';
@@ -51,8 +52,19 @@ class _ParticipantPageState extends State<ParticipantPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Participantes'),
+        centerTitle: false,
+        title: const Text('Participantes', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500)),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.search_rounded),
+            color: const Color.fromARGB(255, 92, 78, 158),
+            onPressed: () {
+              showSearch(
+                context: context,
+                delegate: CustomSearchDelegate(context: context),
+              );
+            },
+          ),
           IconButton(
             icon: const Icon(
               Icons.person_add_alt_rounded,
