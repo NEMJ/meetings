@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../services/firebase_participant_service.dart';
-import '../models/custom_search_delegate.dart';
+import '../models/participant_custom_search_delegate.dart';
 import '../models/participant_model.dart';
 import '../widgets/confirm_deletion_dialog_widget.dart';
 import '../widgets/participant_list_tile_widget.dart';
@@ -15,13 +15,16 @@ class ParticipantPage extends StatefulWidget {
 
 class _ParticipantPageState extends State<ParticipantPage> {
 
-  late Stream<List<ParticipantModel>> participants;
+  late Stream<List<ParticipantModel>> participantsStream;
+  List<ParticipantModel> participantsList = [];
   final firebaseParticipantService = FirebaseParticipantService.instance;
   ImageProvider? userImage;
 
   Future<void> listParticipants() async {
-    participants = firebaseParticipantService.listParticipants();
-    setState(() => participants);
+    participantsStream = firebaseParticipantService.listParticipants();
+    setState(() => participantsStream);
+
+    participantsList = await firebaseParticipantService.listParticipants().first;
   }
 
   navigationToParticipantDetailPage(ParticipantModel? participant) {
@@ -61,7 +64,7 @@ class _ParticipantPageState extends State<ParticipantPage> {
             onPressed: () {
               showSearch(
                 context: context,
-                delegate: CustomSearchDelegate(context: context),
+                delegate: ParticipantCustomSearchDelegate(context: context, participants: participantsList),
               );
             },
           ),
@@ -80,7 +83,7 @@ class _ParticipantPageState extends State<ParticipantPage> {
           children: [
             Expanded(
               child: StreamBuilder<List<ParticipantModel>>(
-                stream: participants,
+                stream: participantsStream,
                 builder: (context, snapshot) {
                   if(snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(child: CircularProgressIndicator());

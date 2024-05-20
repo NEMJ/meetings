@@ -16,15 +16,12 @@ class FirebaseParticipantService {
   }
 
   Stream<List<ParticipantModel>> listParticipants() async* {
-    await for (QuerySnapshot query in _collection.snapshots()) {
+    await for (QuerySnapshot query in _collection.orderBy("nome").snapshots()) {
       List<ParticipantModel> participants = query.docs.map(
         (doc) => ParticipantModel.fromDocument(doc)
       ).toList();
-
-      List<ParticipantModel> orderedParticipants =
-        participants..sort((a, b) => a.nome.compareTo(b.nome));
       
-      yield orderedParticipants;
+      yield participants;
     }
   }
 

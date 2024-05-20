@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:meetings/models/participant_model.dart';
 
-class CustomSearchDelegate extends SearchDelegate {
-  CustomSearchDelegate({required this.context});
+class ParticipantCustomSearchDelegate extends SearchDelegate {
+  ParticipantCustomSearchDelegate({
+    required this.context,
+    required this.participants,
+    super.searchFieldLabel = 'Pesquisar'
+  });
 
   BuildContext context;
-
-  List<String> searchTerms = [
-    'Apple',
-    'Banana',
-    'Pear',
-    'Watermelons',
-    'Oranges',
-    'Blueberries',
-    'Strawberries',
-    'Raspberries'
-  ];
+  List<ParticipantModel> participants;
 
   @override
   List<Widget> buildActions(BuildContext context) {
@@ -42,9 +37,9 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildResults(BuildContext context) {
     List<String> matchQuery = [];
 
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
+    for (var participant in participants) {
+      if (participant.nome.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(participant.nome);
       }
     }
 
@@ -63,9 +58,9 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     List<String> matchQuery = [];
 
-    for (var fruit in searchTerms) {
-      if (fruit.toLowerCase().contains(query.toLowerCase())) {
-        matchQuery.add(fruit);
+    for (var participant in participants) {
+      if (participant.nome.toLowerCase().contains(query.toLowerCase())) {
+        matchQuery.add(participant.nome);
       }
     }
 
